@@ -37,7 +37,14 @@ download_release() {
   version="$1"
   filename="$2"
 
-  url="$GH_REPO/releases/download/${version}/watchexec-${version}-x86_64-unknown-linux-gnu.tar.xz"
+  local platform
+  case "$OSTYPE" in
+    darwin*) platform="apple-darwin" ;;
+    linux*) platform="unknown-linux-gnu" ;;
+    *) fail "Unsupported platform" ;;
+  esac
+
+  url="$GH_REPO/releases/download/${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
 
   echo "* Downloading $TOOL_NAME release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
