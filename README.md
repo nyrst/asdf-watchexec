@@ -52,4 +52,4 @@ Contributions of any kind welcome! See the [contributing guide](contributing.md)
 
 # License
 
-See [LICENSE](LICENSE) © [Siegfried Ehret](https://github.com/SiegfriedEhret/)
+See [LICENSE](LICENSE) © [Siegfried Ehret](https://github.com/SiegfriedEhret/), except lib/semver.sh file which is from https://github.com/cloudflare/semver_bash

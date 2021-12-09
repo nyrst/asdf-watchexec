@@ -25,7 +25,7 @@ sort_versions() {
 list_github_tags() {
   git ls-remote --tags --refs "$GH_REPO" |
     grep -o 'refs/tags/.*' | cut -d/ -f3- |
-    sed 's/^v//'
+    sed 's/^v//' | sed 's/^cli-v//' | grep -v "lib-"
 }
 
 list_all_versions() {
@@ -44,7 +44,14 @@ download_release() {
     *) fail "Unsupported platform" ;;
   esac
 
-  url="$GH_REPO/releases/download/${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
+  semverGT "1.16.0" $version
+  semverCheck=$?
+
+  if [ $semverCheck == 1 ]; then
+    url="$GH_REPO/releases/download/cli-v${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
+  else
+    url="$GH_REPO/releases/download/${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
+  fi
 
   echo "* Downloading $TOOL_NAME release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"

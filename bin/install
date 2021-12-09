@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+source "$(dirname "$0")/../lib/semver.sh"
+
 # shellcheck source=../lib/utils.bash
 source "$(dirname "$0")/../lib/utils.bash"
 
