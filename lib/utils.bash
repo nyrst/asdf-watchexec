@@ -44,12 +44,11 @@ download_release() {
     *) fail "Unsupported platform" ;;
   esac
 
-  semverGT "1.16.0" $version
-  semverCheck=$?
-
-  if [ $semverCheck == 1 ]; then
+  url="$GH_REPO/releases/download/v${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
+  if semverLT $version "1.20.6" ; then
     url="$GH_REPO/releases/download/cli-v${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
-  else
+  fi
+  if semverLT $version "1.16.0" ; then
     url="$GH_REPO/releases/download/${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
   fi
 
