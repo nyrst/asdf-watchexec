@@ -32,6 +32,41 @@ list_all_versions() {
   list_github_tags
 }
 
+get_arch() {
+  uname -m | tr '[:upper:]' '[:lower:]'
+}
+
+get_platform() {
+  uname | tr '[:upper:]' '[:lower:]'
+}
+
+get_release_nugget() {
+  # stolen from
+  # https://gitlab.com/wt0f/asdf-ripgrep/-/blob/master/bin/install?ref_type=heads
+  local nugget
+
+  case $(get_arch)-$(get_platform) in
+  aarch64-darwin)
+    nugget='aarch64-apple-darwin' ;;
+  arm64-darwin)
+    nugget='aarch64-apple-darwin' ;;
+  x86_64-darwin)
+    nugget='x86_64-apple-darwin' ;;
+  arm*-linux)
+    nugget='armv7-unknown-linux-gnueabihf' ;;
+  x86_64-linux)
+    nugget='x86_64-unknown-linux-musl' ;;
+  i[3456]86-linux)
+    nugget='i686-unknown-linux-musl' ;;
+  x86_64-windows)
+    nugget='x86_64-pc-windows-msvc' ;;
+  *)
+    nugget="$(get_arch)-$(get_platform)"
+  esac
+
+  echo "${nugget}"
+}
+
 download_release() {
   local version filename url
   version="$1"
