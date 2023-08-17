@@ -72,19 +72,24 @@ download_release() {
   version="$1"
   filename="$2"
 
-  local platform
-  case "$OSTYPE" in
-    darwin*) platform="apple-darwin" ;;
-    linux*) platform="unknown-linux-gnu" ;;
-    *) fail "Unsupported platform" ;;
-  esac
+  if semverGT $version "1.21.0" ; then
+    local nugget="$(get_release_nugget)"
+    url="$GH_REPO/releases/download/v${version}/watchexec-${version}-${nugget}.tar.xz"
+  else
+    local platform
+    case "$OSTYPE" in
+        darwin*) platform="apple-darwin" ;;
+        linux*) platform="unknown-linux-gnu" ;;
+        *) fail "Unsupported platform" ;;
+    esac
 
-  url="$GH_REPO/releases/download/v${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
-  if semverLT $version "1.20.6" ; then
-    url="$GH_REPO/releases/download/cli-v${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
-  fi
-  if semverLT $version "1.16.0" ; then
-    url="$GH_REPO/releases/download/${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
+    url="$GH_REPO/releases/download/v${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
+    if semverLT $version "1.20.6" ; then
+        url="$GH_REPO/releases/download/cli-v${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
+    fi
+    if semverLT $version "1.16.0" ; then
+        url="$GH_REPO/releases/download/${version}/watchexec-${version}-x86_64-${platform}.tar.xz"
+    fi
   fi
 
   echo "* Downloading $TOOL_NAME release $version..."
