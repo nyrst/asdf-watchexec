@@ -41,28 +41,25 @@ get_platform() {
 }
 
 get_release_nugget() {
-  # stolen from
-  # https://gitlab.com/wt0f/asdf-ripgrep/-/blob/master/bin/install?ref_type=heads
   local nugget
+  local arch="$(get_arch)"
+  local platform="$(get_platform)"
 
-  case $(get_arch)-$(get_platform) in
-  aarch64-darwin)
-    nugget='aarch64-apple-darwin' ;;
-  arm64-darwin)
-    nugget='aarch64-apple-darwin' ;;
-  x86_64-darwin)
-    nugget='x86_64-apple-darwin' ;;
-  arm*-linux)
-    nugget='armv7-unknown-linux-gnueabihf' ;;
-  x86_64-linux)
-    nugget='x86_64-unknown-linux-musl' ;;
-  i[3456]86-linux)
-    nugget='i686-unknown-linux-musl' ;;
-  x86_64-windows)
-    nugget='x86_64-pc-windows-msvc' ;;
-  *)
-    nugget="$(get_arch)-$(get_platform)"
-  esac
+  if [[ "$platform" == "darwin" ]]; then
+      if [[ "$arch" == "aarch64" ]] || [[ "$arch" == "arm64" ]]; then
+          nugget="aarch64-apple-darwin"
+      else
+          nugget="x86_64-apple-darwin"
+      fi
+  else # Linux
+      if [[ "$arch" == "aarch64" ]] || [[ "$arch" == "arm64" ]]; then
+          nugget="aarch64-unknown-linux-musl"
+      elif [[ "$arch" == "i686" ]]; then
+          nugget="i686-unknown-linux-musl"
+      else
+          nugget="x86_64-unknown-linux-musl"
+      fi
+  fi
 
   echo "${nugget}"
 }
